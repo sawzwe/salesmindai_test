@@ -41,13 +41,13 @@ export default function NavLegends() {
       }}
     >
         <IconButton>
-        <Badge badgeContent={3} color="primary">
+        <Badge badgeContent={3} color="info">
         <NotificationsOutlinedIcon color="action" />
       </Badge>
         </IconButton>
 
       <IconButton>
-      <Badge badgeContent={7} color="primary">
+      <Badge badgeContent={7} color="info">
         <ChatBubbleOutlineOutlinedIcon color="action" />
       </Badge>
       </IconButton>

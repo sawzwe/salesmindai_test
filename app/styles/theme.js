@@ -10,8 +10,11 @@ const theme = createTheme({
             navChip: '#E65100',
             goBusiness: '#E65100',
             mainBackground: '#F9F9FC',
-            // mainBackground: '#000',
-
+            newColor: '#F9F9FC',
+            interested: '#FF9800',
+            qualified: '#4CAF50',
+            referral:'#FFC200',
+            notinterested: '#B71C1C'
 
         },
     },
