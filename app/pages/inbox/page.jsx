@@ -1,5 +1,6 @@
 import React from 'react'
-import { InboxDatagrid,InboxMessages } from '@/app/components/inbox'
+import InboxMessages from '@/app/components/inbox/InboxMessage';
+import InboxDatagrid from '@/app/components/inbox/InboxDatagrid';
 export default function Inbox() {
   return (
     <>
