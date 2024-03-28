@@ -1,7 +1,6 @@
 // Nav.js
 "use client";
 import React, { useState, useEffect } from "react";
-import NavigationSection from "./NavigationSection";
 import { styled, useTheme } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
 import {
@@ -22,6 +21,10 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
 
+// Components
+import NavigationSection from "./NavigationSection";
+import NavLegends from "./NavLegends";
+
 export default function Nav() {
   const theme = useTheme();
   const [open, setOpen] = useState(true);
@@ -36,7 +39,7 @@ export default function Nav() {
   const activeChangelog = 1.05;
 
   const avatarPath = "/assets/profile_avatar.png";
-  const salesmindai_logoPath = "/assets/salesmindaiLogo.png"
+  const salesmindai_logoPath = "/assets/salesmindaiLogo.png";
 
   useEffect(() => {
     setActiveLink(router.pathname);

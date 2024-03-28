@@ -9,8 +9,8 @@ const theme = createTheme({
             hover: '#300028',
             navChip: '#E65100',
             goBusiness: '#E65100',
-            // mainBackground: '#F9F9FC',
-            mainBackground: '#000',
+            mainBackground: '#F9F9FC',
+            // mainBackground: '#000',
 
 
         },
