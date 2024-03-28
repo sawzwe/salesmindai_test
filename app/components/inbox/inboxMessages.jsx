@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function InboxMessages() {
+export default function inboxMessages() {
   return (
     <div>
       Private Messages
