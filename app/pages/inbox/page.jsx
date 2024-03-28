@@ -1,15 +1,13 @@
-import React from 'react'
-import InboxMessages from '@/app/components/inbox/InboxMessage';
-import InboxDatagrid from '@/app/components/inbox/InboxDatagrid';
+import React from "react";
+import Message from "@/app/components/inbox/Message";
+import Datagrid from "@/app/components/inbox/Datagrid";
 export default function Inbox() {
   return (
     <>
-    <div>
-      Inbox Page Stats
-    </div>
-    <InboxDatagrid/>
-    <InboxMessages/>
-    </>
+      <div>Inbox Page Stats</div>
+      <Datagrid />
 
-  )
+      <Message />
+    </>
+  );
 }

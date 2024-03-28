@@ -1,9 +1,9 @@
 import React from 'react'
 
-export default function InboxMessage() {
+export default function Datagrid() {
   return (
     <div>
-      Inbox Message
+      Data Grid
     </div>
   )
 }
