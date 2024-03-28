@@ -1,3 +1,3 @@
 // Inbox index.js
-export { default as InboxDataGrid } from './InboxDataGrid';
-export { default as InboxMessages } from './InboxMessages';
+export { default as InboxDatagrid } from './inboxDataGrid';
+export { default as InboxMessages } from './inboxMessages';
