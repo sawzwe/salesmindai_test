@@ -15,13 +15,19 @@ import {
   Select,
   MenuItem,
   Card,
+  Drawer,
+  IconButton,
 } from "@mui/material";
 import dummyData from "@/app/dummyData/dummydata";
 import { styled, useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import Message from "./Message";
+import CloseIcon from "@mui/icons-material/Close";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 export default function Datagrid() {
   const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
   const [selectedRowId, setSelectedRowId] = useState(null);
   const [selectionModel, setSelectionModel] = useState([]);
   const [filters, setFilters] = useState({
@@ -33,9 +39,18 @@ export default function Datagrid() {
     team: "All",
     leadStatus: "All",
   });
+  const [isDrawerOpen, setDrawerOpen] = useState(false);
+
+  const handleDrawerClose = () => {
+    setDrawerOpen(false);
+    setSelectedRowId(null);
+  };
 
   const handleRowClick = (params) => {
     setSelectedRowId(params.id);
+    if (isSmallScreen) {
+      setDrawerOpen(true);
+    }
   };
 
   const columns = [
@@ -129,7 +144,7 @@ export default function Datagrid() {
       },
     },
 
-    { field: "campaign", headerName: "Campaign", flex: 0.3 },
+    { field: "campaign", headerName: "Campaign", flex: 0.25 },
     {
       field: "Sender",
       headerName: "Sender",
@@ -143,13 +158,61 @@ export default function Datagrid() {
             height: "100%",
           }}
         >
-
-            <Avatar alt={params.row.senderName} src={params.row.senderpfp} />
-
+          <Avatar alt={params.row.senderName} src={params.row.senderpfp} />
         </Box>
       ),
     },
     { field: "lastMessage", headerName: "Last Message", flex: 0.15 },
+    {
+      flex: 0.05,
+      renderCell: (params) => (
+        <IconButton>
+          <MoreVertIcon />
+        </IconButton>
+      ),
+    },
+  ];
+
+  const mobileColumns = [
+    {
+      field: "name",
+      headerName: "Lead",
+      flex: 0.55,
+      renderCell: (params) => (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            height: "100%",
+          }}
+        >
+          <Badge
+            badgeContent={params.row.unreadMessages}
+            color="warning"
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+          >
+            <Avatar alt={params.row.name} src={params.row.pfp_url} />
+          </Badge>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              ml: "10px",
+            }}
+          >
+            <Typography variant="body1">{params.row.name}</Typography>
+            <Typography variant="caption">{params.row.role}</Typography>
+          </Box>
+        </Box>
+      ),
+    },
+
+    { field: "campaign", headerName: "Campaign", flex: 0.45 },
   ];
 
   const handleFilterChange = (event) => {
@@ -219,13 +282,12 @@ export default function Datagrid() {
     lastMessage: `${entry.lastMessage.time}`,
   }));
 
+  // Function to close the chat
+  const handleCloseChat = () => {
+    setSelectedRowId(null);
+    setSelectionModel([]);
+  };
 
-    // Function to close the chat
-    const handleCloseChat = () => {
-      setSelectedRowId(null);
-      setSelectionModel([]);
-    };
-  
   return (
     <>
       <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
@@ -247,17 +309,17 @@ export default function Datagrid() {
         </Box>
 
         <Box sx={{ display: "flex", flexDirection: "row", gap: "10px" }}>
-          <Card sx={{ width: "55vw" ,maxWidth: "60%" }}>
+          <Card sx={{ width: isSmallScreen ? "100%" : "60%" }}>
             <Box>
               <Box sx={{ ml: "15px", mr: "15px", mt: "25px" }}>
                 <Box
                   sx={{
                     display: "flex",
+                    flexWrap: "wrap", // Allow the items to wrap into the next row
                     gap: 2,
                     mb: 2,
                     alignItems: "center",
                     justifyContent: "space-between",
-                    width: "100%",
                   }}
                 >
                   <TextField
@@ -267,9 +329,9 @@ export default function Datagrid() {
                     label="Search"
                     variant="outlined"
                     placeholder="Name, company or title"
-                    sx={{ flex: 1 }}
+                    sx={{ flex: isSmallScreen ? "1 1 45%" : "1" }} // Adjust flex basis to control width
                   />
-                  <FormControl sx={{ flex: 1 }}>
+                  <FormControl sx={{ flex: isSmallScreen ? "1 1 45%" : "1" }}>
                     <InputLabel>Campaign</InputLabel>
                     <Select
                       name="campaign"
@@ -286,7 +348,8 @@ export default function Datagrid() {
                     </Select>
                   </FormControl>
 
-                  <FormControl sx={{ flex: 1 }}>
+                  <FormControl sx={{ flex: isSmallScreen ? "1 1 45%" : "1" }}>
+                    {" "}
                     <InputLabel>Team</InputLabel>
                     <Select
                       name="team"
@@ -298,7 +361,8 @@ export default function Datagrid() {
                       {/* Add other <MenuItem> elements here for other team options */}
                     </Select>
                   </FormControl>
-                  <FormControl sx={{ flex: 1 }}>
+                  <FormControl sx={{ flex: isSmallScreen ? "1 1 45%" : "1" }}>
+                    {" "}
                     <InputLabel>Lead Status</InputLabel>
                     <Select
                       name="leadStatus"
@@ -336,10 +400,11 @@ export default function Datagrid() {
                   ))}
                 </Box>
               </Box>
+
               <DataGrid
                 rows={filteredrows}
-                columns={columns}
-                checkboxSelection
+                columns={isSmallScreen ? mobileColumns : columns}
+                checkboxSelection={!isSmallScreen}
                 pageSize={5}
                 rowsPerPageOptions={[5]}
                 pagination
@@ -359,10 +424,29 @@ export default function Datagrid() {
               />
             </Box>
           </Card>
-          {selectedRowId && (
-            <Card sx={{ flexGrow: 1, maxWidth: "40%" }}>
-              <Message selectedId={selectedRowId} onCloseChat={handleCloseChat} />
-            </Card>
+
+          {isSmallScreen ? (
+            <Drawer
+              anchor="bottom"
+              open={isDrawerOpen}
+              onClose={handleDrawerClose}
+            >
+              {selectedRowId && (
+                <Message
+                  selectedId={selectedRowId}
+                  onCloseChat={handleDrawerClose}
+                />
+              )}
+            </Drawer>
+          ) : (
+            selectedRowId && (
+              <Card sx={{ width: "40%" }}>
+                <Message
+                  selectedId={selectedRowId}
+                  onCloseChat={handleDrawerClose}
+                />
+              </Card>
+            )
           )}
         </Box>
       </Box>

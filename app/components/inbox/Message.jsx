@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import {
   Box,
   Typography,
@@ -38,7 +38,12 @@ import MarkunreadIcon from "@mui/icons-material/Markunread"; // Replace with the
 const formatTimestamp = (timestamp) => {
   // Function to format timestamp into a readable format
   const date = new Date(timestamp);
-  return `${date.toDateString()} ${date.toLocaleTimeString()}`;
+  // return `${date.toDateString()} ${date.toLocaleTimeString()}`;
+  return date.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
 };
 
 const groupMessagesByDate = (conversation) => {
@@ -100,19 +105,18 @@ export default function Message({ selectedId, onCloseChat }) {
   const [anchorEmoji, setAnchorEmoji] = useState(null);
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const [menuAnchorEl, setMenuAnchorEl] = useState(null);
+  const messagesEndRef = useRef(null);
 
-  // Function to open LinkedIn URL
+
   const openLinkedInProfile = (url) => {
     window.open(url, "_blank");
     handleClose();
   };
 
-  // Function to open the menu
   const handleMenuClick = (event) => {
     setMenuAnchorEl(event.currentTarget);
   };
 
-  // Function to close the menu
   const handleClose = () => {
     setMenuAnchorEl(null);
   };
@@ -169,17 +173,13 @@ export default function Message({ selectedId, onCloseChat }) {
     setSelectedVariantIndex(newValue);
   };
 
-
   const handleReplyTypeChange = (event) => {
     const newTitleId = event.target.value;
 
     if (newTitleId === "custom") {
-
       setMessage("");
       setSelectedTitleId(newTitleId);
-
     } else {
-
       setSelectedTitleId(newTitleId);
       const newTitle = inboxDummyMessages.find(
         (title) => title.titleId === newTitleId
@@ -221,6 +221,10 @@ export default function Message({ selectedId, onCloseChat }) {
 
   const groupedMessages = groupMessagesByDate(user.conversation);
 
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [groupedMessages]);
+
   const handleTagClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -260,12 +264,10 @@ export default function Message({ selectedId, onCloseChat }) {
     const user = dummyData.find((u) => u.id === id);
     if (user) {
       user.status.unread = false;
-  
-      localStorage.setItem('dummyData', JSON.stringify(dummyData));
+      localStorage.setItem("dummyData", JSON.stringify(dummyData));
     }
     handleClose();
   };
-  
 
   return (
     <Box>
@@ -332,7 +334,14 @@ export default function Message({ selectedId, onCloseChat }) {
             <Typography>Location: {user.location}</Typography>
           </Box>
         </Box>
-        <Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "flex-start",
+          }}
+        >
+          {" "}
           <>
             <IconButton onClick={handleMenuClick}>
               <MoreVertIcon />
@@ -348,7 +357,7 @@ export default function Message({ selectedId, onCloseChat }) {
                 </ListItemIcon>
                 <Typography variant="inherit">View on LinkedIn</Typography>
               </MenuItem>
-              <MenuItem  onClick={() => handleMarkAsUnread(selectedId)}>
+              <MenuItem onClick={() => handleMarkAsUnread(selectedId)}>
                 <ListItemIcon>
                   <MarkunreadIcon fontSize="small" />
                 </ListItemIcon>
@@ -363,8 +372,11 @@ export default function Message({ selectedId, onCloseChat }) {
       </Box>
       <Divider />
 
-      <Box sx={{ height: "65vh", overflowY: "auto" }}>
+      {/* <Box sx={{ height: "65vh", overflowY: "auto" }}> */}
+      <Box sx={{ height: "65vh", overflowY: "auto", flexDirection: 'column-reverse' }}>
+      {/* <div ref={messagesEndRef} /> */}
         {Object.entries(groupedMessages).map(([date, messages]) => (
+        // {Object.entries(groupedMessages).reverse().map(([date, messages]) => (
           <Box key={date} mb={2}>
             <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
               <Typography variant="overline">{date}</Typography>
@@ -382,21 +394,6 @@ export default function Message({ selectedId, onCloseChat }) {
                       padding: "10px",
                     }}
                   >
-                    {/* <Box sx={{ display:'flex',flexDirection:'row', justifyContent: "flex-start" }}>
-                      <Avatar
-                        alt={message.sender}
-                        src={
-                          message.senderId === user.id
-                            ? user.pfp_url
-                            : user.sender.image
-                        }
-                        sx={{
-                          width: 40,
-                          height: 40,
-                          order: isOutgoing ? 2 : 0,
-                        }}
-                      />
-                    </Box> */}
                     <Card
                       key={message.messageId}
                       variant="outlined"
@@ -443,17 +440,25 @@ export default function Message({ selectedId, onCloseChat }) {
                             mr: isOutgoing ? 2 : 0,
                           }}
                         >
-                          <Typography
-                            color="textSecondary"
-                            sx={{
-                              textAlign: isOutgoing ? "left" : "right",
-                              color: isOutgoing ? "#000" : "#FFF",
-                            }}
-                          >
-                            {isOutgoing ? message.sender : message.sender}
-                            {/* at{" "} */}
-                            {/* {formatTimestamp(message.timestamp)} */}
-                          </Typography>
+                          <Box sx={{display:'flex',justifyContent:'space-between'}}>
+                            <Typography
+                              color={isOutgoing ? "textSecondary" : "#FFF"}
+                              sx={{
+                                textAlign: isOutgoing ? "left" : "right",
+                              }}
+                            >
+                              {message.sender}
+                            </Typography>
+                            <Typography
+                              sx={{
+                                color: isOutgoing ? "#000" : "#FFF",
+                                textAlign: isOutgoing ? "left" : "right",
+                              }}
+                            >
+                              {formatTimestamp(message.timestamp)}
+                            </Typography>
+                          </Box>
+
                           <Typography
                             sx={{
                               // textAlign: isOutgoing ? "right" : "left",
