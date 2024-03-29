@@ -14,7 +14,8 @@ const theme = createTheme({
             interested: '#FF9800',
             qualified: '#4CAF50',
             referral:'#FFC200',
-            notinterested: '#B71C1C'
+            notinterested: '#B71C1C',
+            chatColor: '#7B0035',
 
         },
     },

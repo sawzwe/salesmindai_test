@@ -38,7 +38,7 @@ export default function NavLegends() {
         justifyContent: "flex-end",
         paddingRight: theme.spacing(2),
         gap: theme.spacing(2),
-        width:'100%'
+        // width:'100%'
       }}
     >
         <IconButton>

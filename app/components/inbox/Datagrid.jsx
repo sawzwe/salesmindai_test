@@ -54,7 +54,7 @@ export default function Datagrid() {
         >
           <Badge
             badgeContent={params.row.unreadMessages}
-            color="error"
+            color="warning"
             anchorOrigin={{
               vertical: "top",
               horizontal: "right",
@@ -143,16 +143,9 @@ export default function Datagrid() {
             height: "100%",
           }}
         >
-          <Badge
-            badgeContent={params.row.unreadMessages}
-            color="error"
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-          >
+
             <Avatar alt={params.row.senderName} src={params.row.senderpfp} />
-          </Badge>
+
         </Box>
       ),
     },
@@ -172,11 +165,6 @@ export default function Datagrid() {
       [event.target.name]: event.target.value,
     });
   };
-
-  // const handleSelectionModelChange = (selectionModel) => {
-  //   // console.log('Selected',selectionModel);
-  //   setSelectionModel(selectionModel);
-  // };
 
   const handleSelectionModelChange = (selectionModel) => {
     if (selectionModel.length > 0) {
@@ -220,6 +208,7 @@ export default function Datagrid() {
   const filteredrows = filteredData.map((entry) => ({
     id: entry.id,
     pfp_url: entry.pfp_url,
+    unreadMessages: entry.unreadMessages,
     name: entry.name,
     role: entry.role,
     tag: entry.tag,
@@ -230,8 +219,13 @@ export default function Datagrid() {
     lastMessage: `${entry.lastMessage.time}`,
   }));
 
-  // console.log('Selected Model',selectionModel);
 
+    // Function to close the chat
+    const handleCloseChat = () => {
+      setSelectedRowId(null);
+      setSelectionModel([]);
+    };
+  
   return (
     <>
       <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
@@ -253,7 +247,7 @@ export default function Datagrid() {
         </Box>
 
         <Box sx={{ display: "flex", flexDirection: "row", gap: "10px" }}>
-          <Card sx={{ width: "55vw" }}>
+          <Card sx={{ width: "55vw" ,maxWidth: "60%" }}>
             <Box>
               <Box sx={{ ml: "15px", mr: "15px", mt: "25px" }}>
                 <Box
@@ -353,7 +347,8 @@ export default function Datagrid() {
                 onRowSelectionModelChange={handleSelectionModelChange}
                 selectionModel={selectionModel}
                 sx={{
-                  height: "60vh",
+                  // height: "60vh",
+                  height: "80vh",
                   "& .MuiDataGrid-main": {
                     maxHeight: "70vh",
                   },
@@ -365,8 +360,8 @@ export default function Datagrid() {
             </Box>
           </Card>
           {selectedRowId && (
-            <Card sx={{ flexGrow: 1 }}>
-              <Message selectedId={selectedRowId} />
+            <Card sx={{ flexGrow: 1, maxWidth: "40%" }}>
+              <Message selectedId={selectedRowId} onCloseChat={handleCloseChat} />
             </Card>
           )}
         </Box>
