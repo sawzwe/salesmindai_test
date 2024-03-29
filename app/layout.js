@@ -21,7 +21,7 @@ export default function RootLayout({ children }) {
           <ThemeProvider theme={theme}>
             <div style={{ display: 'flex' }}>
 
-              <Nav />
+              {/* <Nav /> */}
               <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
                 <NavLegends />
                 <main style={{ flex: 1, padding: '20px' }}>

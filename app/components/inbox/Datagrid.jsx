@@ -14,13 +14,15 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Card,
 } from "@mui/material";
 import dummyData from "@/app/dummyData/dummydata";
 import { styled, useTheme } from "@mui/material/styles";
+import Message from "./Message";
 
 export default function Datagrid() {
   const theme = useTheme();
-  const [selectedRows,setSelectedRows] = useState(0)
+  const [selectedRowId, setSelectedRowId] = useState(null);
   const [selectionModel, setSelectionModel] = useState([]);
   const [filters, setFilters] = useState({
     unread: false,
@@ -31,6 +33,10 @@ export default function Datagrid() {
     team: "All",
     leadStatus: "All",
   });
+
+  const handleRowClick = (params) => {
+    setSelectedRowId(params.id);
+  };
 
   const columns = [
     {
@@ -167,10 +173,21 @@ export default function Datagrid() {
     });
   };
 
-const handleSelectionModelChange = (selectionModel) => {
-  // console.log('Selected',selectionModel);
-  setSelectionModel(selectionModel);
-};
+  // const handleSelectionModelChange = (selectionModel) => {
+  //   // console.log('Selected',selectionModel);
+  //   setSelectionModel(selectionModel);
+  // };
+
+  const handleSelectionModelChange = (selectionModel) => {
+    if (selectionModel.length > 0) {
+      const latestSelectedRowId = selectionModel[selectionModel.length - 1];
+      setSelectedRowId(latestSelectedRowId);
+    } else {
+      setSelectedRowId(null);
+    }
+    setSelectionModel(selectionModel);
+  };
+  console.log("Selected Row", selectedRowId);
 
   const filteredData = dummyData.filter((entry) => {
     return (
@@ -213,12 +230,15 @@ const handleSelectionModelChange = (selectionModel) => {
     lastMessage: `${entry.lastMessage.time}`,
   }));
 
+  // console.log('Selected Model',selectionModel);
 
   return (
     <>
-      <Box style={{ width: "55vw" }}>
+      <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
         <Box sx={{ display: "flex", flexDirection: "column" }}>
-          <Typography variant="h6" sx={{fontWeight:'bold'}}>Inbox</Typography>
+          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+            Inbox
+          </Typography>
           <Box sx={{ display: "flex", flexDirection: "row", gap: "10px" }}>
             <Typography variant="subtitle1" sx={{ opacity: 0.8 }}>
               {`Total:${totalInbox}`}
@@ -231,111 +251,125 @@ const handleSelectionModelChange = (selectionModel) => {
             </Typography>
           </Box>
         </Box>
-        <Box
-          sx={{
-            display: "flex",
-            gap: 2,
-            mb: 2,
-            alignItems: "center",
-            justifyContent: "space-between",
-            width: "100%",
-          }}
-        >
-          <TextField
-            name="search"
-            value={filters.search}
-            onChange={handleFilterSearchChange}
-            label="Search"
-            variant="outlined"
-            placeholder="Name, company or title"
-            sx={{ flex: 1 }}
-          />
-          <FormControl sx={{ flex: 1 }}>
-            <InputLabel>Campaign</InputLabel>
-            <Select
-              name="campaign"
-              value={filters.campaign}
-              onChange={handleFilterChange}
-              label="Campaign"
-            >
-              <MenuItem value="All">All</MenuItem>
-              {uniqueCampaigns.map((campaignName) => (
-                <MenuItem key={campaignName} value={campaignName}>
-                  {campaignName}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
 
-          <FormControl sx={{ flex: 1 }}>
-            <InputLabel>Team</InputLabel>
-            <Select
-              name="team"
-              value={filters.team}
-              onChange={handleFilterSearchChange}
-              label="Team"
-            >
-              <MenuItem value="All">All</MenuItem>
-              {/* Add other <MenuItem> elements here for other team options */}
-            </Select>
-          </FormControl>
-          <FormControl sx={{ flex: 1 }}>
-            <InputLabel>Lead Status</InputLabel>
-            <Select
-              name="leadStatus"
-              value={filters.leadStatus}
-              onChange={handleFilterSearchChange}
-              label="Lead Status"
-            >
-              <MenuItem value="All">All</MenuItem>
-              {uniqueLeadStatus.map((leadStatus) => (
-                <MenuItem key={leadStatus} value={leadStatus}>
-                  {leadStatus}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Box>
-        <Box sx={{ display: "flex" ,mb: 2 }}>
-          <Typography variant="subtitle1" sx={{opacity:0.8}}>
-          {`Selected: ${selectionModel.length}`}
-                    </Typography>
-        </Box>
-        <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
-          {["unread", "unreplied", "drafting"].map((status) => (
-            <FormControlLabel
-              key={status}
-              control={
-                <Checkbox
-                  checked={filters[status]}
-                  onChange={handleFilterChange}
-                  name={status}
-                />
-              }
-              label={status.charAt(0).toUpperCase() + status.slice(1)}
-            />
-          ))}
-        </Box>
-        <DataGrid
-  rows={filteredrows}
-  columns={columns}
-  checkboxSelection
-  pageSize={5}
-  rowsPerPageOptions={[5]}
-  pagination
-  hideFooter
+        <Box sx={{ display: "flex", flexDirection: "row", gap: "10px" }}>
+          <Card sx={{ width: "55vw" }}>
+            <Box>
+              <Box sx={{ ml: "15px", mr: "15px", mt: "25px" }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: 2,
+                    mb: 2,
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    width: "100%",
+                  }}
+                >
+                  <TextField
+                    name="search"
+                    value={filters.search}
+                    onChange={handleFilterSearchChange}
+                    label="Search"
+                    variant="outlined"
+                    placeholder="Name, company or title"
+                    sx={{ flex: 1 }}
+                  />
+                  <FormControl sx={{ flex: 1 }}>
+                    <InputLabel>Campaign</InputLabel>
+                    <Select
+                      name="campaign"
+                      value={filters.campaign}
+                      onChange={handleFilterChange}
+                      label="Campaign"
+                    >
+                      <MenuItem value="All">All</MenuItem>
+                      {uniqueCampaigns.map((campaignName) => (
+                        <MenuItem key={campaignName} value={campaignName}>
+                          {campaignName}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
 
-  onRowSelectionModelChange={handleSelectionModelChange} 
-  selectionModel={selectionModel} 
-  sx={{
-    height: "60vh",
-    "& .MuiDataGrid-main": {
-      maxHeight: "70vh",
-    },
-  }}
-  density="compact"
-  rowHeight={120}
-/>
+                  <FormControl sx={{ flex: 1 }}>
+                    <InputLabel>Team</InputLabel>
+                    <Select
+                      name="team"
+                      value={filters.team}
+                      onChange={handleFilterSearchChange}
+                      label="Team"
+                    >
+                      <MenuItem value="All">All</MenuItem>
+                      {/* Add other <MenuItem> elements here for other team options */}
+                    </Select>
+                  </FormControl>
+                  <FormControl sx={{ flex: 1 }}>
+                    <InputLabel>Lead Status</InputLabel>
+                    <Select
+                      name="leadStatus"
+                      value={filters.leadStatus}
+                      onChange={handleFilterSearchChange}
+                      label="Lead Status"
+                    >
+                      <MenuItem value="All">All</MenuItem>
+                      {uniqueLeadStatus.map((leadStatus) => (
+                        <MenuItem key={leadStatus} value={leadStatus}>
+                          {leadStatus}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Box>
+                <Box sx={{ display: "flex", mb: 2 }}>
+                  <Typography variant="subtitle1" sx={{ opacity: 0.8 }}>
+                    {`Selected: ${selectionModel.length}`}
+                  </Typography>
+                </Box>
+                <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
+                  {["unread", "unreplied", "drafting"].map((status) => (
+                    <FormControlLabel
+                      key={status}
+                      control={
+                        <Checkbox
+                          checked={filters[status]}
+                          onChange={handleFilterChange}
+                          name={status}
+                        />
+                      }
+                      label={status.charAt(0).toUpperCase() + status.slice(1)}
+                    />
+                  ))}
+                </Box>
+              </Box>
+              <DataGrid
+                rows={filteredrows}
+                columns={columns}
+                checkboxSelection
+                pageSize={5}
+                rowsPerPageOptions={[5]}
+                pagination
+                hideFooter
+                onRowSelectionModelChange={handleSelectionModelChange}
+                selectionModel={selectionModel}
+                sx={{
+                  height: "60vh",
+                  "& .MuiDataGrid-main": {
+                    maxHeight: "70vh",
+                  },
+                }}
+                density="compact"
+                rowHeight={120}
+                onRowClick={handleRowClick}
+              />
+            </Box>
+          </Card>
+          {selectedRowId && (
+            <Card sx={{ flexGrow: 1 }}>
+              <Message selectedId={selectedRowId} />
+            </Card>
+          )}
+        </Box>
       </Box>
     </>
   );
