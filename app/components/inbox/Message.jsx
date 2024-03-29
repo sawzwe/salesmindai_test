@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef,useCallback } from "react";
 import {
   Box,
   Typography,
@@ -118,7 +118,7 @@ export default function Message({ selectedId, onCloseChat }) {
     setMenuAnchorEl(null);
   };
 
-  const getDefaultMessage = () => {
+  const getDefaultMessage = useCallback(() => {
     if (selectedTitleId === "custom") {
       return "";
     } else {
@@ -129,13 +129,13 @@ export default function Message({ selectedId, onCloseChat }) {
         ? selectedTitle.variants[selectedVariantIndex].content
         : "";
     }
-  };
+  }, [selectedTitleId, selectedVariantIndex]);
 
   const [defaultMessage, setDefaultMessage] = useState(getDefaultMessage());
 
   useEffect(() => {
     setDefaultMessage(getDefaultMessage());
-  }, [selectedTitleId, selectedVariantIndex]);
+  }, [getDefaultMessage]);
 
   const handleRegenerateClick = () => {
     setMessage(defaultMessage);
@@ -188,7 +188,15 @@ export default function Message({ selectedId, onCloseChat }) {
 
   useEffect(() => {
     setMessage(selectedTitle.variants[0].content);
-  }, []);
+  }, [selectedTitle.variants]);
+
+  useEffect(() => {
+    const selectedTitle = inboxDummyMessages.find(
+      (title) => title.titleId === selectedTitleId
+    );
+    setMessage(selectedTitle.variants[0].content);
+  }, [selectedTitleId]); 
+  
 
   const userTags = {
     Interested: {
