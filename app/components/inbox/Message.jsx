@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef,useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Box,
   Typography,
@@ -118,27 +118,27 @@ export default function Message({ selectedId, onCloseChat }) {
     setMenuAnchorEl(null);
   };
 
-  const getDefaultMessage = useCallback(() => {
-    if (selectedTitleId === "custom") {
-      return "";
-    } else {
-      const selectedTitle = inboxDummyMessages.find(
-        (title) => title.titleId === selectedTitleId
-      );
-      return selectedTitle && selectedTitle.variants[selectedVariantIndex]
-        ? selectedTitle.variants[selectedVariantIndex].content
-        : "";
-    }
-  }, [selectedTitleId, selectedVariantIndex]);
+  // const getDefaultMessage = () => {
+  //   if (selectedTitleId === "custom") {
+  //     return "";
+  //   } else {
+  //     const selectedTitle = inboxDummyMessages.find(
+  //       (title) => title.titleId === selectedTitleId
+  //     );
+  //     return selectedTitle && selectedTitle.variants[selectedVariantIndex]
+  //       ? selectedTitle.variants[selectedVariantIndex].content
+  //       : "";
+  //   }
+  // };
 
-  const [defaultMessage, setDefaultMessage] = useState(getDefaultMessage());
+  // const [defaultMessage, setDefaultMessage] = useState(getDefaultMessage());
 
-  useEffect(() => {
-    setDefaultMessage(getDefaultMessage());
-  }, [getDefaultMessage]);
+  // useEffect(() => {
+  //   setDefaultMessage(getDefaultMessage());
+  // }, [selectedTitleId, selectedVariantIndex]);
 
   const handleRegenerateClick = () => {
-    setMessage(defaultMessage);
+    setMessage('');
   };
 
   const handleEmojiClick = (event, emojiObject) => {
@@ -188,15 +188,7 @@ export default function Message({ selectedId, onCloseChat }) {
 
   useEffect(() => {
     setMessage(selectedTitle.variants[0].content);
-  }, [selectedTitle.variants]);
-
-  useEffect(() => {
-    const selectedTitle = inboxDummyMessages.find(
-      (title) => title.titleId === selectedTitleId
-    );
-    setMessage(selectedTitle.variants[0].content);
-  }, [selectedTitleId]); 
-  
+  }, []);
 
   const userTags = {
     Interested: {
@@ -226,9 +218,9 @@ export default function Message({ selectedId, onCloseChat }) {
 
   const groupedMessages = groupMessagesByDate(user.conversation);
 
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [groupedMessages]);
+  // useEffect(() => {
+  //   messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  // }, [groupedMessages]);
 
   const handleTagClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -520,7 +512,7 @@ export default function Message({ selectedId, onCloseChat }) {
                     {title.title}
                   </MenuItem>
                 ))}
-                <MenuItem value="custom">Custom</MenuItem>
+                {/* <MenuItem value="custom">Custom</MenuItem> */}
               </Select>
             </FormControl>
 
@@ -593,7 +585,7 @@ export default function Message({ selectedId, onCloseChat }) {
             <Button
               variant="contained"
               startIcon={<CachedIcon />}
-              onClick={handleRegenerateClick} // Set onClick handler
+              onClick={handleRegenerateClick} 
               sx={{ textTransform: "none", borderRadius: 20 }}
             >
               Regenerate respond
