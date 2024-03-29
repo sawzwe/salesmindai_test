@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect,useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Box,
   Typography,
@@ -32,13 +32,11 @@ import CachedIcon from "@mui/icons-material/Cached";
 import ImageIcon from "@mui/icons-material/Image";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import EmojiPicker from "emoji-picker-react";
-import LinkedInIcon from "@mui/icons-material/LinkedIn"; // Replace with the actual icon you're using
-import MarkunreadIcon from "@mui/icons-material/Markunread"; // Replace with the actual icon you're using
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import MarkunreadIcon from "@mui/icons-material/Markunread";
 
 const formatTimestamp = (timestamp) => {
-  // Function to format timestamp into a readable format
   const date = new Date(timestamp);
-  // return `${date.toDateString()} ${date.toLocaleTimeString()}`;
   return date.toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
@@ -106,7 +104,6 @@ export default function Message({ selectedId, onCloseChat }) {
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const [menuAnchorEl, setMenuAnchorEl] = useState(null);
   const messagesEndRef = useRef(null);
-
 
   const openLinkedInProfile = (url) => {
     window.open(url, "_blank");
@@ -373,10 +370,16 @@ export default function Message({ selectedId, onCloseChat }) {
       <Divider />
 
       {/* <Box sx={{ height: "65vh", overflowY: "auto" }}> */}
-      <Box sx={{ height: "65vh", overflowY: "auto", flexDirection: 'column-reverse' }}>
-      {/* <div ref={messagesEndRef} /> */}
+      <Box
+        sx={{
+          height: "65vh",
+          overflowY: "auto",
+          flexDirection: "column-reverse",
+        }}
+      >
+        {/* <div ref={messagesEndRef} /> */}
         {Object.entries(groupedMessages).map(([date, messages]) => (
-        // {Object.entries(groupedMessages).reverse().map(([date, messages]) => (
+          // {Object.entries(groupedMessages).reverse().map(([date, messages]) => (
           <Box key={date} mb={2}>
             <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
               <Typography variant="overline">{date}</Typography>
@@ -440,7 +443,12 @@ export default function Message({ selectedId, onCloseChat }) {
                             mr: isOutgoing ? 2 : 0,
                           }}
                         >
-                          <Box sx={{display:'flex',justifyContent:'space-between'}}>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                            }}
+                          >
                             <Typography
                               color={isOutgoing ? "textSecondary" : "#FFF"}
                               sx={{
@@ -488,6 +496,7 @@ export default function Message({ selectedId, onCloseChat }) {
               marginBottom: 2,
               gap: "20px",
               alignItems: "center",
+              width: "100%",
             }}
           >
             <FormControl sx={{ width: "30%" }}>

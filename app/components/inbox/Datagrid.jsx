@@ -267,7 +267,6 @@ export default function Datagrid() {
     0
   );
 
-  // Rows for the DataGrid
   const filteredrows = filteredData.map((entry) => ({
     id: entry.id,
     pfp_url: entry.pfp_url,
@@ -282,7 +281,6 @@ export default function Datagrid() {
     lastMessage: `${entry.lastMessage.time}`,
   }));
 
-  // Function to close the chat
   const handleCloseChat = () => {
     setSelectedRowId(null);
     setSelectionModel([]);
@@ -315,7 +313,7 @@ export default function Datagrid() {
                 <Box
                   sx={{
                     display: "flex",
-                    flexWrap: "wrap", // Allow the items to wrap into the next row
+                    flexWrap: "wrap", 
                     gap: 2,
                     mb: 2,
                     alignItems: "center",
